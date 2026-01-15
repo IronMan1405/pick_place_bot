@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ESP32 Robot Control</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: sans-serif;
+                background: #111;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+                .slider-box {
+                width: 80%;
+                max-width: 300px;
+            }
+
+                #estop {
+                background: red;
+                color: white;
+                font-size: 20px;
+                padding: 15px 30px;
+                border: none;
+                border-radius: 10px;
+            }
+
+            #joystick {
+                width: 200px;
+                height: 200px;
+                background: #222;
+                border-radius: 50%;
+                position: relative;
+                touch-action: none;
+            }
+
+            #stick {
+                width: 60px;
+                height: 60px;
+                background: #888;
+                border-radius: 50%;
+                position: absolute;
+                left: 70px;
+                top: 70px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="joystick">
+                <div id="stick"></div>
+            </div>
+
+            <div class="slider-box">
+                <label>Servo 1</label>
+                <input type="range" min="0" max="180" value="90"
+                    oninput="sendServo(1, this.value)">
+            </div>
+
+            <div class="slider-box">
+                <label>Servo 2</label>
+                <input type="range" min="0" max="180" value="90"
+                    oninput="sendServo(2, this.value)">
+            </div>
+
+            <button id="estop" onclick="toggleEStop()">EMERGENCY STOP</button>
+
+        </div>
+
+        <script>
+            let socket = null;
+            let emergency = false;
+
+            function initWebSocket() {
+                if (!location.hostname) {
+                    console.log("Local mode: WebSocket disabled");
+                    return;
+                }
+
+                socket = new WebSocket(`ws://${location.hostname}:81`);
+
+                socket.onopen = () => console.log("WebSocket Connected.");
+                socket.onclose = () => console.log("WebSocket disconnected.");
+            }
+
+            initWebSocket();
+
+            function wsSend(msg) {
+                if (socket && socket.readyState === 1) {
+                    socket.send(msg);
+                } else {
+                    console.log("WS >", msg);
+                }
+            }
+
+            function sendServo() {
+                wsSend(`S,${id},${angle}`);
+            }
+
+            function toggleEStop() {
+                emergency = !emergency;
+                wsSend(`E,${emergency ? 1 : 0}`);
+                document.getElementById("estop").style.background = emergency ? "darkred" : "red";
+            }
+
+            const joystick = document.getElementById("joystick");
+            const stick = document.getElementById("stick");
+
+            let dragging = false;
+            const center = 100;
+            const maxDist = 70;
+
+            function handleMove(clientX, clientY) {
+                const rect = joystick.getBoundingClientRect();
+                let x = clientX - rect.left - center;
+                let y = clientY - rect.top - center;
+
+                const dist = Math.hypot(x, y);
+                if (dist > maxDist) {
+                    x *= maxDist / dist;
+                    y *= maxDist / dist;
+                }
+
+                stick.style.left = `${center + x - 30}px`;
+                stick.style.top  = `${center + y - 30}px`;
+
+                const normX = (x / maxDist).toFixed(2);
+                const normY = (-y / maxDist).toFixed(2);
+
+                wsSend(`D,${normX},${normY}`);
+            }
+
+            joystick.addEventListener("mousedown", e => {
+                dragging = true;
+                handleMove(e.clientX, e.clientY);
+            });
+
+            window.addEventListener("mousemove", e => {
+                if (dragging) handleMove(e.clientX, e.clientY);
+            });
+
+            window.addEventListener("mouseup", () => {
+                dragging = false;
+                stick.style.left = "70px";
+                stick.style.top = "70px";
+                wsSend("D,0,0");
+            });
+
+
+            joystick.addEventListener("touchstart", e => {
+                dragging = true;
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            joystick.addEventListener("touchmove", e => {
+                if (dragging) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            });
+
+            joystick.addEventListener("touchend", () => {
+                dragging = false;
+                stick.style.left = "70px";
+                stick.style.top = "70px";
+                wsSend("D,0,0");
+            });
+        </script>
+
+    </body>
+</html>
