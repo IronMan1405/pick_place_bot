@@ -26,7 +26,7 @@
 #define IN4_2 32
 
 #define SERVO_1_PIN 14
-#define SERVO_2_PIN 12
+#define SERVO_2_PIN 13
 
 #define SERVO_MIN_US 500
 #define SERVO_MAX_US 2500

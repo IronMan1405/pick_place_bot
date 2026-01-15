@@ -102,11 +102,11 @@
                 if (socket && socket.readyState === 1) {
                     socket.send(msg);
                 } else {
-                    console.log("WS >", msg);
+                    console.log("WS > ", msg);
                 }
             }
 
-            function sendServo() {
+            function sendServo(id, angle) {
                 wsSend(`S,${id},${angle}`);
             }
 

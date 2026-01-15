@@ -8,7 +8,7 @@ Servo servo2;
 
 void servoInit() {
     servo1.attach(SERVO_1_PIN, SERVO_MIN_US, SERVO_MAX_US);
-    servo1.attach(SERVO_2_PIN, SERVO_MIN_US, SERVO_MAX_US);
+    servo2.attach(SERVO_2_PIN, SERVO_MIN_US, SERVO_MAX_US);
 
     servo1.write(90);
     servo2.write(90);
@@ -16,6 +16,9 @@ void servoInit() {
 
 void setServoAngle(uint8_t id, int angle) {
     angle = constrain(angle, 0, 180);
+
+    Serial.println(id);
+    Serial.println(angle);
 
     if (id == 1) servo1.write(angle);
     if (id == 2) servo2.write(angle);

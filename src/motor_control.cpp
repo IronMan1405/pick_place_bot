@@ -40,14 +40,30 @@ void motorInit() {
 }
 
 void drive(float x, float y) {
-    int leftSpeed = (x + y) * MAX_PWM;
-    int rightSpeed = (x - y) * MAX_PWM;
+    // Serial.println("x:");
+    // Serial.print(x);
+    // Serial.println("y");
+    // Serial.print(y);
+    
+    // int leftSpeed = (x + y) * MAX_PWM;
+    // int rightSpeed = (x - y) * MAX_PWM;
 
-    setMotorSpeed(IN1_1, IN2_1, ENA_1, leftSpeed);
-    setMotorSpeed(IN3_1, IN4_1, ENA_1, leftSpeed);
+    // setMotorSpeed(IN1_1, IN2_1, ENA_1, leftSpeed);
+    // setMotorSpeed(IN3_1, IN4_1, ENB_1, leftSpeed);
+    // Serial.println("Left speed:");
+    // Serial.print(leftSpeed);
 
-    setMotorSpeed(IN1_2, IN2_2, ENA_2, rightSpeed);
-    setMotorSpeed(IN3_2, IN4_2, ENB_2, rightSpeed);
+    // setMotorSpeed(IN1_2, IN2_2, ENA_2, rightSpeed);
+    // setMotorSpeed(IN3_2, IN4_2, ENB_2, rightSpeed);
+    // Serial.println("Right speed:");
+    // Serial.print(rightSpeed);
+
+
+
+    // setMotorSpeed(IN1_1, IN2_1, ENA_1, 255);
+    // setMotorSpeed(IN3_1, IN4_1, ENB_1, 255);
+    // setMotorSpeed(IN1_2, IN2_2, ENA_2, 255);
+    // setMotorSpeed(IN3_2, IN4_2, ENB_2, 255);
 }
 
 void stopAllMotors() {

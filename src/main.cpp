@@ -48,6 +48,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         int id, angle;
         sscanf(msg, "S,%d,%d", &id, &angle);
         setServoAngle(id, angle);
+        lastCmdTime = millis();
     }
     else if (msg[0] == 'E') {
         int state;
