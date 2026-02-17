@@ -107,6 +107,27 @@ void setup() {
         file.close();
     });
 
+    server.on("/index.css", HTTP_GET, []() {
+        File file = SPIFFS.open("/index.css", "r");
+        if (!file) {
+            server.send(500, "text/plain", "index.css missing");
+            return;
+        }
+        server.streamFile(file, "text/css");
+        file.close();
+    });
+
+    server.on("/index.js", HTTP_GET, []() {
+        File file = SPIFFS.open("/index.js", "r");
+        if (!file) {
+            server.send(500, "text/plain", "index.js missing");
+            return;
+        }
+        server.streamFile(file, "application/javascript");
+        file.close();
+    });
+
+
     server.begin();
     Serial.println("HTTP server started");
 
