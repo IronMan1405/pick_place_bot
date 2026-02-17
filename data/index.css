@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+position : absolute ;
+left : 550px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+    .slider-box {
+    width: 80%;
+    max-width: 300px;
+}
+
+    #estop {
+    background: red;
+    color: white;
+    font-size: 20px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+}
+
+#joystick {
+    width: 200px;
+    height: 200px;
+    background: #222;
+    border-radius: 50%;
+    position: relative;
+    touch-action: none;
+cursor: pointer;
+}
+
+#stick {
+    width: 60px;
+    height: 60px;
+    background: #888;
+    border-radius: 50%;
+    position: absolute;
+    left: 70px;
+    top: 70px;
+}
+
+#circular-dial-container {
+    position : absolute;
+    left : 300px;
+    text-align: center;
+    margin: 20px;
+}
+
+#circular-dial {
+    cursor: pointer;
+}
+
